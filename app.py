@@ -21,22 +21,16 @@ app.config.suppress_callback_exceptions = True
 
 # Load data from csv
 def load_data():
-    # Cargar el archivo CSV en un DataFrame de pandas
     df = pd.read_csv('datos_energia.csv')
     
-    # Convertir la columna 'time' a formato de fecha y hora
     df['time'] = pd.to_datetime(df['time'])
     
-    # Establecer la columna 'time' como el índice del DataFrame
     df = df.set_index('time')
     
-    # Ordenar el DataFrame por el índice (la fecha)
     df = df.sort_index()
     
-    # --- AÑADE ESTA LÍNEA AQUÍ ADENTRO ---
     print(f"RANGO DE FECHAS DISPONIBLE: {df.index.min()} HASTA {df.index.max()}")
     
-    # Retornar el DataFrame procesado
     return df
     
 
