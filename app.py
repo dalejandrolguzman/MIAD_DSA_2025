@@ -21,22 +21,16 @@ app.config.suppress_callback_exceptions = True
 
 # Load data from csv
 def load_data():
-    # Cargar el archivo CSV en un DataFrame de pandas
     df = pd.read_csv('datos_energia.csv')
     
-    # Convertir la columna 'time' a formato de fecha y hora
     df['time'] = pd.to_datetime(df['time'])
     
-    # Establecer la columna 'time' como el índice del DataFrame
     df = df.set_index('time')
     
-    # Ordenar el DataFrame por el índice (la fecha)
     df = df.sort_index()
     
-    # --- AÑADE ESTA LÍNEA AQUÍ ADENTRO ---
     print(f"RANGO DE FECHAS DISPONIBLE: {df.index.min()} HASTA {df.index.max()}")
     
-    # Retornar el DataFrame procesado
     return df
     
 
@@ -45,23 +39,16 @@ data = load_data()
 
 # Graficar serie
 def plot_series(data, initial_date, proy):
-    # Filtramos los datos desde la fecha inicial seleccionada
     data_filtrada = data.loc[initial_date:]
     
-    # Separamos los datos históricos (demanda real) de los de proyección
-    # Los datos históricos son los que tienen valores en 'AT_load_actual_entsoe_transparency'
     demanda_historica = data_filtrada['AT_load_actual_entsoe_transparency'].dropna()
     
-    # Los datos de proyección son los que tienen valores en 'forecast'
     datos_proyeccion = data_filtrada[['forecast', 'Upper bound', 'Lower bound']].dropna()
     
-    # Solo mostramos las primeras 'proy' horas de la proyección
     datos_proyeccion = datos_proyeccion.head(proy)
     
-    # Creamos la figura
     fig = go.Figure()
 
-    # Añadimos la línea de demanda histórica (verde oscuro)
     fig.add_trace(go.Scatter(
         name='Demanda energética',
         x=demanda_historica.index,
@@ -70,7 +57,6 @@ def plot_series(data, initial_date, proy):
         line=dict(color="#188463"),
     ))
 
-    # Añadimos la línea de proyección (verde claro)
     if not datos_proyeccion.empty:
         fig.add_trace(go.Scatter(
             name='Proyección',
@@ -80,7 +66,6 @@ def plot_series(data, initial_date, proy):
             line=dict(color="#bbffeb"),
         ))
 
-        # Añadimos el límite superior
         fig.add_trace(go.Scatter(
             name='Upper Bound',
             x=datos_proyeccion.index,
@@ -91,7 +76,6 @@ def plot_series(data, initial_date, proy):
             showlegend=False
         ))
         
-        # Añadimos el límite inferior con relleno
         fig.add_trace(go.Scatter(
             name='Lower Bound',
             x=datos_proyeccion.index,
@@ -104,7 +88,6 @@ def plot_series(data, initial_date, proy):
             showlegend=False
         ))
 
-    # Configuramos el estilo de la gráfica
     fig.update_layout(
         legend=dict(
             orientation="h",
