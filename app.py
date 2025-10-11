@@ -8,7 +8,7 @@ import pandas as pd
 import datetime as dt
 
 
-# Cambio de prueba en la rama taller_dash_rama1
+# Este es un cambio hecho por el compañero
 
 app = dash.Dash(
     __name__,
